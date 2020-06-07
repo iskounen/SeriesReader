@@ -3,7 +3,7 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         NavigationView {
-            SeriesList()
+            SeriesList(fetcher: getSeries)
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }

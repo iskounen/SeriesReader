@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct SeriesList: View {
-    @State private var localSeries = [Series]()
+    var fetcher: () throws -> [Series]
+    @State private var localSeries: [Series] = [Series]()
     
     @State private var alertMessage: String = ""
     @State private var showingAlert: Bool = false
@@ -18,68 +19,21 @@ struct SeriesList: View {
                 Text("Download")
             }
         )
-        .onAppear(perform: loadLocalSeries)
+        .onAppear(perform: loadSeries)
         .alert(isPresented: $showingAlert) {
             Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         }
     }
     
-    func loadLocalSeries() {
-        let documentsURL: URL
-        do {
-            documentsURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-        } catch {
-            self.alertMessage = error.localizedDescription
-            self.showingAlert.toggle()
-            return
-        }
-        
-        let seriesRootFolderURL = documentsURL.appendingPathComponent("Series")
-        
-        if !FileManager.default.fileExists(atPath: seriesRootFolderURL.absoluteString) {
-            do {
-                try FileManager.default.createDirectory(at: seriesRootFolderURL, withIntermediateDirectories: true, attributes: nil)
-            } catch {
-                self.alertMessage = error.localizedDescription
-                self.showingAlert.toggle()
-                return
-            }
-        }
-
-        let seriesFolderNames: [String]
+    func loadSeries() {
+        let series:[Series]
         
         do {
-            seriesFolderNames = try FileManager.default.contentsOfDirectory(atPath: seriesRootFolderURL.relativePath)
+            series = try fetcher()
         } catch {
-            self.alertMessage = error.localizedDescription
-            self.showingAlert.toggle()
-            return
-        }
-
-        var series = [Series]()
-        
-        for (_, seriesFolderName) in seriesFolderNames.sorted().enumerated() {
-            if let seriesID =  UUID(uuidString: seriesFolderName) {
-                // load series metadata to populate list item
-                
-                let seriesFolderURL = seriesRootFolderURL.appendingPathComponent(seriesFolderName)
-                let metadataURL = seriesFolderURL.appendingPathComponent(".metadata")
-                var seriesTitle = "Untitled"
-                
-                if !FileManager.default.fileExists(atPath: metadataURL.absoluteString) {
-                    do {
-                        let data = try Data(contentsOf: metadataURL)
-                        let json = try JSONSerialization.jsonObject(with: data) as! [String: Any]
-                        seriesTitle = json["title"] as! String
-                    } catch {
-                        self.alertMessage = error.localizedDescription
-                        self.showingAlert.toggle()
-                        return
-                    }
-                }
-                
-                series.append(Series(id: seriesID, title: seriesTitle))
-            }
+            series = [Series]()
+            alertMessage = error.localizedDescription
+            showingAlert.toggle()
         }
 
         DispatchQueue.main.async {
@@ -90,6 +44,16 @@ struct SeriesList: View {
 
 struct SeriesList_Previews: PreviewProvider {
     static var previews: some View {
-        SeriesList()
+        SeriesList(fetcher: mockSeries)
+    }
+    
+    static func mockSeries() throws -> [Series] {
+        var series: [Series] = [Series]()
+        
+        series.append(Series(id: UUID(), title: "Foo"))
+        series.append(Series(id: UUID(), title: "Bar"))
+        series.append(Series(id: UUID(), title: "Baz"))
+        
+        return series
     }
 }

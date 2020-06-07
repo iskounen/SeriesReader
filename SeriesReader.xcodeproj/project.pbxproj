@@ -18,9 +18,11 @@
 		136D999C2474CEAF000DD9B7 /* BookList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 136D999B2474CEAF000DD9B7 /* BookList.swift */; };
 		136D999E2474D00F000DD9B7 /* RemoteSeriesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 136D999D2474D00F000DD9B7 /* RemoteSeriesList.swift */; };
 		13A4369E247A97DD0043C031 /* RemoteBookList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13A4369D247A97DD0043C031 /* RemoteBookList.swift */; };
-		13A436A1247AA23E0043C031 /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = 13A436A0247AA23E0043C031 /* Zip */; };
 		13A436A3247BFB910043C031 /* PageCarousel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13A436A2247BFB910043C031 /* PageCarousel.swift */; };
 		13A436A5247BFBEA0043C031 /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13A436A4247BFBEA0043C031 /* Page.swift */; };
+		13BA5745248D0A2800454189 /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = 13BA5744248D0A2800454189 /* Zip */; };
+		13BA5747248D0B3B00454189 /* DataStorageHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BA5746248D0B3B00454189 /* DataStorageHelpers.swift */; };
+		13BA5749248D19D600454189 /* SeriesDataStorageHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BA5748248D19D600454189 /* SeriesDataStorageHelpers.swift */; };
 		13C6EBC52475F8FE00864E03 /* Book.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C6EBC42475F8FE00864E03 /* Book.swift */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +42,8 @@
 		13A4369D247A97DD0043C031 /* RemoteBookList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBookList.swift; sourceTree = "<group>"; };
 		13A436A2247BFB910043C031 /* PageCarousel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageCarousel.swift; sourceTree = "<group>"; };
 		13A436A4247BFBEA0043C031 /* Page.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
+		13BA5746248D0B3B00454189 /* DataStorageHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStorageHelpers.swift; sourceTree = "<group>"; };
+		13BA5748248D19D600454189 /* SeriesDataStorageHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeriesDataStorageHelpers.swift; sourceTree = "<group>"; };
 		13C6EBC42475F8FE00864E03 /* Book.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Book.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -48,7 +52,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				13A436A1247AA23E0043C031 /* Zip in Frameworks */,
+				13BA5745248D0A2800454189 /* Zip in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,6 +64,7 @@
 			children = (
 				136D997A2474BB6C000DD9B7 /* SeriesReader */,
 				136D99792474BB6C000DD9B7 /* Products */,
+				13BA5743248D0A2800454189 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -74,6 +79,7 @@
 		136D997A2474BB6C000DD9B7 /* SeriesReader */ = {
 			isa = PBXGroup;
 			children = (
+				13BA574A248D19F700454189 /* Helpers */,
 				136D997B2474BB6C000DD9B7 /* AppDelegate.swift */,
 				136D997D2474BB6C000DD9B7 /* SceneDelegate.swift */,
 				136D997F2474BB6C000DD9B7 /* ContentView.swift */,
@@ -101,6 +107,22 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		13BA5743248D0A2800454189 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		13BA574A248D19F700454189 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				13BA5746248D0B3B00454189 /* DataStorageHelpers.swift */,
+				13BA5748248D19D600454189 /* SeriesDataStorageHelpers.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -118,7 +140,7 @@
 			);
 			name = SeriesReader;
 			packageProductDependencies = (
-				13A436A0247AA23E0043C031 /* Zip */,
+				13BA5744248D0A2800454189 /* Zip */,
 			);
 			productName = SeriesReader;
 			productReference = 136D99782474BB6C000DD9B7 /* SeriesReader.app */;
@@ -182,6 +204,8 @@
 				136D997C2474BB6C000DD9B7 /* AppDelegate.swift in Sources */,
 				136D997E2474BB6C000DD9B7 /* SceneDelegate.swift in Sources */,
 				13A436A3247BFB910043C031 /* PageCarousel.swift in Sources */,
+				13BA5747248D0B3B00454189 /* DataStorageHelpers.swift in Sources */,
+				13BA5749248D19D600454189 /* SeriesDataStorageHelpers.swift in Sources */,
 				136D999E2474D00F000DD9B7 /* RemoteSeriesList.swift in Sources */,
 				13A436A5247BFBEA0043C031 /* Page.swift in Sources */,
 				13A4369E247A97DD0043C031 /* RemoteBookList.swift in Sources */,
@@ -394,7 +418,7 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		13A436A0247AA23E0043C031 /* Zip */ = {
+		13BA5744248D0A2800454189 /* Zip */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 13A4369F247AA23E0043C031 /* XCRemoteSwiftPackageReference "Zip" */;
 			productName = Zip;
