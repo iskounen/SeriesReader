@@ -47,7 +47,7 @@ struct BookList: View {
 
         var books = [Book]()
 
-        for (_, bookFolderName) in bookFolderNames.sorted().enumerated() {
+        for (_, bookFolderName) in bookFolderNames.enumerated() {
             if let bookID =  UUID(uuidString: bookFolderName) {
                 // load book metadata to populate list item
                 
@@ -68,6 +68,10 @@ struct BookList: View {
                 }
                 books.append(Book(id: bookID, number: bookNumber))
             }
+        }
+        
+        books.sort {
+            $0.number < $1.number
         }
 
         DispatchQueue.main.async {
