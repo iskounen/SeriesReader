@@ -4,6 +4,7 @@ import Zip
 struct RemoteBookList: View {
     @State private var remoteBooks: [Book] = [Book]()
     
+    @State private var alertTitle: String = ""
     @State private var alertMessage: String = ""
     @State private var showingAlert: Bool = false
     
@@ -14,17 +15,19 @@ struct RemoteBookList: View {
             HStack {
                 Text(String(book.number))
                 Spacer()
-                Button(action: {
-                    self.downloadRemoteBook(book: book)
-                }) {
-                    Image(systemName: "icloud.and.arrow.down")
+                if !exists(seriesID: series.id, bookID: book.id) {
+                    Button(action: {
+                        self.downloadRemoteBook(book: book)
+                    }) {
+                        Image(systemName: "icloud.and.arrow.down")
+                    }
                 }
             }
         }
         .navigationBarTitle(Text("Available Books"))
         .onAppear(perform: loadRemoteBooks)
         .alert(isPresented: $showingAlert) {
-            Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+            Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         }
     }
     
@@ -39,6 +42,7 @@ struct RemoteBookList: View {
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
+                self.alertTitle = "Error"
                 self.alertMessage = error.localizedDescription
                 self.showingAlert.toggle()
                 return
@@ -46,6 +50,7 @@ struct RemoteBookList: View {
             
             guard let httpResponse = response as? HTTPURLResponse,
                 200 == httpResponse.statusCode else {
+                    self.alertTitle = "Error"
                     self.alertMessage = response.debugDescription
                     self.showingAlert.toggle()
                     return
@@ -59,12 +64,14 @@ struct RemoteBookList: View {
                     }
                     return
                 } catch {
+                    self.alertTitle = "Error"
                     self.alertMessage = error.localizedDescription
                     self.showingAlert.toggle()
                     return
                 }
             }
-
+            
+            self.alertTitle = "Error"
             self.alertMessage = "Unknown error"
             self.showingAlert.toggle()
         }.resume()
@@ -81,6 +88,7 @@ struct RemoteBookList: View {
         
         URLSession.shared.downloadTask(with: request) { urlOrNil, responseOrNil, errorOrNil in
             if let error = errorOrNil {
+                self.alertTitle = "Error"
                 self.alertMessage = error.localizedDescription
                 self.showingAlert.toggle()
                 return
@@ -88,12 +96,14 @@ struct RemoteBookList: View {
             
             guard let httpResponse = responseOrNil as? HTTPURLResponse,
                 200 == httpResponse.statusCode else {
+                    self.alertTitle = "Error"
                     self.alertMessage = responseOrNil.debugDescription
                     self.showingAlert.toggle()
                     return
             }
             
             guard let downloadedFileURL = urlOrNil else {
+                self.alertTitle = "Error"
                 self.alertMessage = "Download error"
                 self.showingAlert.toggle()
                 return
@@ -111,6 +121,7 @@ struct RemoteBookList: View {
                     do {
                         try FileManager.default.createDirectory(atPath: seriesFolderURL.relativePath, withIntermediateDirectories: true, attributes: nil)
                     } catch {
+                        self.alertTitle = "Error"
                         self.alertMessage = error.localizedDescription
                         self.showingAlert.toggle()
                         return
@@ -125,6 +136,7 @@ struct RemoteBookList: View {
                         let json = try JSONSerialization.data(withJSONObject:metadata)
                         try json.write(to: metadataURL)
                     } catch {
+                        self.alertTitle = "Error"
                         self.alertMessage = error.localizedDescription
                         self.showingAlert.toggle()
                         return
@@ -143,6 +155,7 @@ struct RemoteBookList: View {
                         do {
                             try FileManager.default.removeItem(at: unzipDestinationURL)
                         } catch {
+                            self.alertTitle = "Error"
                             self.alertMessage = error.localizedDescription
                             self.showingAlert.toggle()
                         }
@@ -154,12 +167,14 @@ struct RemoteBookList: View {
                         do {
                             try FileManager.default.removeItem(at: resourceForkFolderURL)
                         } catch {
+                            self.alertTitle = "Error"
                             self.alertMessage = error.localizedDescription
                             self.showingAlert.toggle()
                         }
                     }
                     try Zip.unzipFile(unzipDestinationURL, destination: seriesFolderURL, overwrite: true, password: nil, progress: {(progress) -> () in print(progress)})
                 } catch {
+                    self.alertTitle = "Error"
                     self.alertMessage = error.localizedDescription
                     self.showingAlert.toggle()
                     return
@@ -168,9 +183,7 @@ struct RemoteBookList: View {
                 // rename the folder to its UUID
                 
                 let unzippedbookFolderURL = seriesFolderURL.appendingPathComponent(String(book.number))
-                print(unzippedbookFolderURL)
                 let renamedBookFolderdURL = seriesFolderURL.appendingPathComponent(book.id.uuidString)
-                print(renamedBookFolderdURL)
                 try FileManager.default.moveItem(at: unzippedbookFolderURL, to: renamedBookFolderdURL)
                 
                 // add a file with metadata about the book
@@ -182,11 +195,17 @@ struct RemoteBookList: View {
                     let json = try JSONSerialization.data(withJSONObject:metadata)
                     try json.write(to: metadataURL)
                 } catch {
+                    self.alertTitle = "Error"
                     self.alertMessage = error.localizedDescription
                     self.showingAlert.toggle()
                     return
                 }
+                
+                self.alertTitle = "Success"
+                self.alertMessage = "Download completed"
+                self.showingAlert.toggle()
             } catch {
+                self.alertTitle = "Error"
                 self.alertMessage = error.localizedDescription
                 self.showingAlert.toggle()
                 return
