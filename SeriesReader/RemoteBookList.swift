@@ -29,7 +29,7 @@ struct RemoteBookList: View {
     }
     
     func loadRemoteBooks() {
-        let address = "http://192.168.1.10:3000/series/\(self.series.id.uuidString)/books.json"
+        let address = "http://192.168.0.171:3000/series/\(self.series.id.uuidString)/books.json"
         
         guard let url = URL(string: address) else {
             fatalError("Invalid address: \(address)")
@@ -71,7 +71,7 @@ struct RemoteBookList: View {
     }
     
     func downloadRemoteBook(book: Book) {
-        let address = "http://192.168.1.10:3000/series/\(self.series.id.uuidString)/books/\(book.id.uuidString).json"
+        let address = "http://192.168.0.171:3000/series/\(self.series.id.uuidString)/books/\(book.id.uuidString).json"
         
         guard let url = URL(string: address) else {
             fatalError("Invalid address: \(address)")
@@ -168,7 +168,9 @@ struct RemoteBookList: View {
                 // rename the folder to its UUID
                 
                 let unzippedbookFolderURL = seriesFolderURL.appendingPathComponent(String(book.number))
+                print(unzippedbookFolderURL)
                 let renamedBookFolderdURL = seriesFolderURL.appendingPathComponent(book.id.uuidString)
+                print(renamedBookFolderdURL)
                 try FileManager.default.moveItem(at: unzippedbookFolderURL, to: renamedBookFolderdURL)
                 
                 // add a file with metadata about the book

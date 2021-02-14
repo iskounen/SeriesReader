@@ -20,7 +20,7 @@ struct RemoteSeriesList: View {
     }
     
     func loadRemoteSeries() {
-        let address = "http://192.168.1.10:3000/series.json"
+        let address = "http://192.168.0.171:3000/series.json"
         
         guard let url = URL(string: address) else {
             fatalError("Invalid address: \(address)")
