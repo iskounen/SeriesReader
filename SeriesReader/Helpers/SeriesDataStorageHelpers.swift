@@ -52,3 +52,24 @@ func getSeriesRootURL() throws -> URL {
 func getSeriesURL(directoryName: String) throws -> URL {
     return try getSeriesRootURL().appendingPathComponent(directoryName)
 }
+
+func exists(seriesID: UUID, bookID: UUID) -> Bool {
+    let documentsURL: URL
+    do {
+        documentsURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+    } catch {
+        return false
+    }
+    
+    let seriesRootFolderURL = documentsURL.appendingPathComponent("Series")
+    let seriesFolderURL = seriesRootFolderURL.appendingPathComponent(seriesID.uuidString)
+    
+    let bookFolderNames: [String]
+    do {
+        bookFolderNames = try FileManager.default.contentsOfDirectory(atPath: seriesFolderURL.relativePath)
+    } catch {
+        return false
+    }
+    
+    return bookFolderNames.contains(bookID.uuidString)
+}
